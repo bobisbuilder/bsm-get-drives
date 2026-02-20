@@ -1,0 +1,37 @@
+for i = 1, 5 do  -- Loop 5 times
+    -- Thing 1: Glitched Drive
+    local args = {
+        {
+            Name = "Glitched Drive"
+        }
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("remoteFunctions"):WaitForChild("PlayerActivesCommand"):InvokeServer(unpack(args))
+    task.wait(0.05)
+
+    -- Thing 2: Red Drive
+    local args2 = {
+        {
+            Name = "Red Drive"
+        }
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("remoteFunctions"):WaitForChild("PlayerActivesCommand"):InvokeServer(unpack(args2))
+    task.wait(0.05)
+
+    -- Thing 3: White Drive
+    local args3 = {
+        {
+            Name = "White Drive"
+        }
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("remoteFunctions"):WaitForChild("PlayerActivesCommand"):InvokeServer(unpack(args3))
+    task.wait(0.05)
+
+    -- Thing 4: Blue Drive
+    local args4 = {
+        {
+            Name = "Blue Drive"
+        }
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("remoteFunctions"):WaitForChild("PlayerActivesCommand"):InvokeServer(unpack(args4))
+    task.wait(0.05)
+end
