@@ -35,3 +35,11 @@ for i = 1, 5 do  -- Loop 5 times
     game:GetService("ReplicatedStorage"):WaitForChild("remoteFunctions"):WaitForChild("PlayerActivesCommand"):InvokeServer(unpack(args4))
     task.wait(0.05)
 end
+
+task.wait(0.05)
+
+local args = {
+	"quit"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
+
