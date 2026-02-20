@@ -1,47 +1,42 @@
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
+local remoteEvents = ReplicatedStorage:WaitForChild("remoteEvents")
+local remoteFunctions = ReplicatedStorage:WaitForChild("remoteFunctions")
 
-local function fireRemoteEvent(eventName, args)
-    local event = ReplicatedStorage:WaitForChild("remoteEvents"):WaitForChild(eventName)
-    event:FireServer(unpack(args))
+local function fire(eventName, args)
+    remoteEvents:WaitForChild(eventName):FireServer(unpack(args))
 end
 
-
-local function invokeRemoteFunction(funcName, args)
-    local func = ReplicatedStorage:WaitForChild("remoteFunctions"):WaitForChild(funcName)
-    return func:InvokeServer(unpack(args))
+local function invoke(funcName, args)
+    return remoteFunctions:WaitForChild(funcName):InvokeServer(unpack(args))
 end
 
+---------------------------------------------------------------------
+-- PHASE 1: BUY ALL DRIVES (RUNS ONCE)
+---------------------------------------------------------------------
+
+local drives = {"RedDrive", "WhiteDrive", "BlueDrive", "GlitchedDrive"}
 
 local function doRoboBearChallenge(driveType)
+    fire("SelectNPCOption", {"StartRoboBearChallenge"})
+    task.wait(0.1)
 
-    fireRemoteEvent("SelectNPCOption", {"StartRoboBearChallenge"})
-    task.wait(0.04)
+    fire("roboBearChallenge", {"selectQuest", 1})
+    task.wait(0.1)
 
+    fire("roboBearChallenge", {"selectBee", 1})
+    task.wait(0.1)
 
-    fireRemoteEvent("roboBearChallenge", {"selectQuest", 1})
-    task.wait(0.04)
+    fire("roboBearChallenge", {"start"})
+    task.wait(0.1)
 
+    fire("roboBearChallenge", {"quit"})
+    task.wait(0.1)
 
-    fireRemoteEvent("roboBearChallenge", {"selectBee", 3})
-    task.wait(0.04)
-    fireRemoteEvent("roboBearChallenge", {"selectBee", 3})
-    task.wait(0.04)
-
-
-    fireRemoteEvent("roboBearChallenge", {"start"})
-    task.wait(0.04)
-
-
-    fireRemoteEvent("roboBearChallenge", {"quit"})
-    task.wait(0.04)
-
-
-    invokeRemoteFunction("ItemPackageEvent", {
+    invoke("ItemPackageEvent", {
         "Purchase",
         {
             Type = driveType,
@@ -49,15 +44,136 @@ local function doRoboBearChallenge(driveType)
             Amount = 1
         }
     })
-    task.wait(0.04)
+    task.wait(0.1)
 end
-
-
-local drives = {"RedDrive", "WhiteDrive", "BlueDrive", "GlitchedDrive"}
-
 
 for _, drive in ipairs(drives) do
     for i = 1, 5 do
         doRoboBearChallenge(drive)
     end
 end
+
+print("Finished buying all drives.")
+
+---------------------------------------------------------------------
+-- PHASE 2: LOOP FOREVER UNTIL DIGITAL BEE IS FOUND
+---------------------------------------------------------------------
+
+local function openRoboBear()
+    fire("SelectNPCOption", {"StartRoboBearChallenge"})
+    task.wait(0.2)
+    fire("roboBearChallenge", {"selectQuest", 1})
+    task.wait(0.2)
+end
+
+local function getBeeButtons()
+    local screen = PlayerGui:FindFirstChild("ScreenGui")
+    if not screen then return nil end
+
+    local prompt = screen:FindFirstChild("RoboBearPrompt")
+    if not prompt then return nil end
+
+    local main = prompt:FindFirstChild("MainFrame")
+    if not main then return nil end
+
+    local box = main:FindFirstChild("Box")
+    if not box then return nil end
+
+    local beeScreen = box:FindFirstChild("BeeSelectScreen")
+    if not beeScreen then return nil end
+
+    local frame = beeScreen:FindFirstChild("ButtonFrame")
+    if not frame then return nil end
+
+    return {
+        frame:FindFirstChild("Button1"),
+        frame:FindFirstChild("Button2"),
+        frame:FindFirstChild("Button3")
+    }
+end
+
+local function checkForDigitalBee()
+    local buttons = getBeeButtons()
+    if not buttons then return nil end
+
+    for index, button in ipairs(buttons) do
+        if button and button:FindFirstChild("Text1") then
+            local text = button.Text1.Text
+            if text == "★ Digital Bee (Lvl 22)" then
+                return index
+            end
+        end
+    end
+
+    return nil
+end
+
+local function reroll()
+    fire("roboBearChallenge", {"reroll"})
+end
+
+local digitalBeeFound = false
+
+while not digitalBeeFound do
+    openRoboBear()
+    task.wait(0.2)
+
+    local foundIndex = checkForDigitalBee()
+
+    if foundIndex then
+        print("Digital Bee found in slot:", foundIndex)
+        fire("roboBearChallenge", {"selectBee", foundIndex})
+        task.wait(0.4)
+        digitalBeeFound = true
+        break
+    end
+
+    for i = 1, 5 do
+        reroll()
+        task.wait(0.2)
+
+        foundIndex = checkForDigitalBee()
+        if foundIndex then
+            print("Digital Bee found after reroll in slot:", foundIndex)
+            fire("roboBearChallenge", {"selectBee", foundIndex})
+            task.wait(0.15)
+            digitalBeeFound = true
+            break
+        end
+    end
+
+    if not digitalBeeFound then
+        print("Digital Bee not found. Restarting round...")
+        fire("roboBearChallenge", {"start"})
+        task.wait(0.3)
+        fire("roboBearChallenge", {"quit"})
+        task.wait(0.6)
+    end
+end
+
+print("Digital Bee successfully selected!")
+
+---------------------------------------------------------------------
+-- PHASE 3: START ROUND + USE DRIVES + QUIT ROUND
+---------------------------------------------------------------------
+
+fire("roboBearChallenge", {"start"})
+task.wait(0.5)
+
+for i = 1, 5 do
+    invoke("PlayerActivesCommand", {{Name = "Glitched Drive"}})
+    task.wait(0.05)
+    invoke("PlayerActivesCommand", {{Name = "Red Drive"}})
+    task.wait(0.05)
+    invoke("PlayerActivesCommand", {{Name = "White Drive"}})
+    task.wait(0.05)
+    invoke("PlayerActivesCommand", {{Name = "Blue Drive"}})
+    task.wait(0.05)
+end
+
+print("All drives used. Quitting round...")
+
+fire("roboBearChallenge", {"quit"})
+task.wait(0.5)
+
+print("Round quit. Script complete.")
