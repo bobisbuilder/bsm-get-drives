@@ -1,330 +1,63 @@
-for i = 1, 5 do
-    
-    local startArgs = {
-        "StartRoboBearChallenge"
-    }
 
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("remoteEvents")
-        :WaitForChild("SelectNPCOption")
-        :FireServer(unpack(startArgs))
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
 
-    task.wait(0.1) 
-
-
-    local args = {
-        "selectQuest",
-        1
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "selectBee",
-        3
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "selectBee",
-        3
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "start"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local quitArgs = {
-        "quit"
-    }
-
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("remoteEvents")
-        :WaitForChild("roboBearChallenge")
-        :FireServer(unpack(quitArgs))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "Purchase",
-        {
-            Type = "RedDrive",
-            Category = "Eggs",
-            Amount = 1
-        }
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteFunctions"):WaitForChild("ItemPackageEvent"):InvokeServer(unpack(args))
-
-    
-    task.wait(0.1) -- optional delay between loops
+local function fireRemoteEvent(eventName, args)
+    local event = ReplicatedStorage:WaitForChild("remoteEvents"):WaitForChild(eventName)
+    event:FireServer(unpack(args))
 end
 
 
-for i = 1, 5 do
-    
-    local startArgs = {
-        "StartRoboBearChallenge"
-    }
-
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("remoteEvents")
-        :WaitForChild("SelectNPCOption")
-        :FireServer(unpack(startArgs))
-
-
-    task.wait(0.1) 
-
-
-    local args = {
-        "selectQuest",
-        1
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "selectBee",
-        3
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "selectBee",
-        3
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "start"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local quitArgs = {
-        "quit"
-    }
-
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("remoteEvents")
-        :WaitForChild("roboBearChallenge")
-        :FireServer(unpack(quitArgs))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "Purchase",
-        {
-            Type = "WhiteDrive",
-            Category = "Eggs",
-            Amount = 1
-        }
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteFunctions"):WaitForChild("ItemPackageEvent"):InvokeServer(unpack(args))
-
-    
-    task.wait(0.1) -- optional delay between loops
+local function invokeRemoteFunction(funcName, args)
+    local func = ReplicatedStorage:WaitForChild("remoteFunctions"):WaitForChild(funcName)
+    return func:InvokeServer(unpack(args))
 end
 
 
-for i = 1, 5 do
-    
-    local startArgs = {
-        "StartRoboBearChallenge"
-    }
+local function doRoboBearChallenge(driveType)
 
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("remoteEvents")
-        :WaitForChild("SelectNPCOption")
-        :FireServer(unpack(startArgs))
+    fireRemoteEvent("SelectNPCOption", {"StartRoboBearChallenge"})
+    task.wait(0.04)
 
 
-    task.wait(0.1) 
+    fireRemoteEvent("roboBearChallenge", {"selectQuest", 1})
+    task.wait(0.04)
 
 
-    local args = {
-        "selectQuest",
-        1
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
+    fireRemoteEvent("roboBearChallenge", {"selectBee", 3})
+    task.wait(0.04)
+    fireRemoteEvent("roboBearChallenge", {"selectBee", 3})
+    task.wait(0.04)
 
 
-    task.wait(0.1)
+    fireRemoteEvent("roboBearChallenge", {"start"})
+    task.wait(0.04)
 
 
-    local args = {
-        "selectBee",
-        3
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
+    fireRemoteEvent("roboBearChallenge", {"quit"})
+    task.wait(0.04)
 
 
-    task.wait(0.1)
-
-
-    local args = {
-        "selectBee",
-        3
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "start"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local quitArgs = {
-        "quit"
-    }
-
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("remoteEvents")
-        :WaitForChild("roboBearChallenge")
-        :FireServer(unpack(quitArgs))
-
-
-    task.wait(0.1)
-
-
-    local args = {
+    invokeRemoteFunction("ItemPackageEvent", {
         "Purchase",
         {
-            Type = "BlueDrive",
+            Type = driveType,
             Category = "Eggs",
             Amount = 1
         }
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteFunctions"):WaitForChild("ItemPackageEvent"):InvokeServer(unpack(args))
-
-    
-    task.wait(0.1) -- optional delay between loops
+    })
+    task.wait(0.04)
 end
 
 
-for i = 1, 5 do
-    
-    local startArgs = {
-        "StartRoboBearChallenge"
-    }
-
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("remoteEvents")
-        :WaitForChild("SelectNPCOption")
-        :FireServer(unpack(startArgs))
+local drives = {"RedDrive", "WhiteDrive", "BlueDrive", "GlitchedDrive"}
 
 
-    task.wait(0.1) 
-
-
-    local args = {
-        "selectQuest",
-        1
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "selectBee",
-        3
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "selectBee",
-        3
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "start"
-    }
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteEvents"):WaitForChild("roboBearChallenge"):FireServer(unpack(args))
-
-
-    task.wait(0.1)
-
-
-    local quitArgs = {
-        "quit"
-    }
-
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("remoteEvents")
-        :WaitForChild("roboBearChallenge")
-        :FireServer(unpack(quitArgs))
-
-
-    task.wait(0.1)
-
-
-    local args = {
-        "Purchase",
-        {
-            Type = "GlitchedDrive",
-            Category = "Eggs",
-            Amount = 1
-        }
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("remoteFunctions"):WaitForChild("ItemPackageEvent"):InvokeServer(unpack(args))
-
-    
-    task.wait(0.1) -- optional delay between loops
+for _, drive in ipairs(drives) do
+    for i = 1, 5 do
+        doRoboBearChallenge(drive)
+    end
 end
