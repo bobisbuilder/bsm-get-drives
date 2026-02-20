@@ -30,15 +30,9 @@ local Window = Rayfield:CreateWindow({
     local FarmSection = FarmTab:CreateSection("Drives")
 
     local Button = FarmTab:CreateButton({
-   Name = "get drives",
+   Name = "Digital Bee Drives",
    Callback = function()
    loadstring(game:HttpGet("https://raw.githubusercontent.com/bobisbuilder/bsm-get-drives/refs/heads/main/drives"))()
-   end,
-})
-    local Button = FarmTab:CreateButton({
-   Name = "feed drives",
-   Callback = function()
-   loadstring(game:HttpGet("https://raw.githubusercontent.com/bobisbuilder/bsm-get-drives/refs/heads/main/feed%20drives"))()
    end,
 })
 
